@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارت دعوت عروسی</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* صفحه اول (عکس دلخواه) */
+        .cover {
+            width: 100vw;
+            height: 100vh;
+            background-image: url('N.jpg'); /* آدرس تصویر دلخواه */
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        /* پاکت نامه و دعوت‌نامه */
+        .envelope {
+            display: none; /* در ابتدا نمایش داده نمی‌شود */
+            position: relative;
+            width: 300px;
+            height: 500px;
+            background-color: white;
+            border: 5px solid white;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .envelope::before, .envelope::after {
+            content: '';
+            position: absolute;
+            background-color: white;
+            width: 100%;
+            height: 100px;
+            transition: all 0.5s ease;
+        }
+
+        .envelope::before {
+            top: 0;
+            left: 0;
+            transform-origin: top;
+            transform: rotateX(0deg);
+        }
+
+        .envelope::after {
+            bottom: 0;
+            left: 0;
+        }
+
+        .invitation {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 6s ease;
+        }
+
+        .invitation img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .invitation h1 {
+            color: white;
+            font-size: 24px;
+        }
+
+        .invitation p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .envelope.open .invitation {
+            opacity: 1;
+        }
+
+        .envelope.open::before {
+            transform: rotateX(-180deg);
+        }
+
+        .music-btn {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: white;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- صفحه اول (عکس دلخواه) -->
+<div class="cover" id="cover"></div>
+
+<!-- پاکت نامه و دعوت‌نامه -->
+<div class="envelope" id="envelope">
+    <div class="invitation">
+        <img src="2.jpg" alt="Wedding">
+        <a class="music-btn" id="playMusic">پخش موزیک</a>
+    </div>
+</div>
+
+<audio id="music" autoplay>
+    <source src="FF.mp3" type="audio/mp3">
+    مرورگر شما پخش این موزیک را پشتیبانی نمی‌کند.
+</audio>
+
+<script>
+    const cover = document.getElementById('cover');
+    const envelope = document.getElementById('envelope');
+    const music = document.getElementById('music');
+
+    // وقتی روی عکس کلیک شود، صفحه بعدی نمایش داده می‌شود و موزیک پخش می‌شود
+    cover.addEventListener('click', function() {
+        cover.style.display = 'none';  // مخفی کردن صفحه اول (عکس)
+        envelope.style.display = 'block';  // نمایش پاکت نامه و کارت دعوت
+        music.play();  // پخش موزیک به‌طور خودکار
+
+        // تأخیر کوتاه برای نمایش انیمیشن باز شدن پاکت نامه
+        setTimeout(function() {
+            envelope.classList.add('open');  // افزودن کلاس open برای باز کردن پاکت
+        }, 200);  // مدت زمان تأخیر
+    });
+
+
+music.addEventListener('ended', function() {
+        envelope.classList.remove('open');  // پنهان کردن پاکت نامه بعد از پایان موزیک
+        cover.style.display = 'block';  // نمایش مجدد صفحه اول
+        cover.classList.remove('fade-out');
+    });
+</script>
+
+</body>
+</html>
