@@ -15,13 +15,12 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            direction: rtl;
         }
-
-        /* صفحه اول (عکس دلخواه) */
         .cover {
             width: 100vw;
             height: 100vh;
-            background-image: url('N.jpg'); /* آدرس تصویر دلخواه */
+            background-image: url('N.jpg');
             background-size: cover;
             background-position: center;
             cursor: pointer;
@@ -29,11 +28,25 @@
             top: 0;
             left: 0;
             z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            font-size: 24px;
         }
 
-        /* پاکت نامه و دعوت‌نامه */
+        .cover::after {
+            content: 'روی عکسمون کلیک کنید';
+            display: block;
+            font-size: 18px;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+        }
         .envelope {
-            display: none; /* در ابتدا نمایش داده نمی‌شود */
+            display: none;
             position: relative;
             width: 300px;
             height: 500px;
@@ -113,19 +126,65 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+
+        .countdown-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            direction: rtl; 
+        }
+
+        .location {
+            font-size: 18px;
+            color: #333;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            border: 2px solid #333;
+        }
+
+        .countdown {
+            font-size: 24px;
+            color: #333;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            border: 2px solid #333;
+        }
+
+        .location a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .location a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
-<!-- صفحه اول (عکس دلخواه) -->
+
 <div class="cover" id="cover"></div>
 
-<!-- پاکت نامه و دعوت‌نامه -->
 <div class="envelope" id="envelope">
     <div class="invitation">
         <img src="2.jpg" alt="Wedding">
         <a class="music-btn" id="playMusic">پخش موزیک</a>
     </div>
+</div>
+
+<div class="countdown-container">
+    <div class="location">
+        <a href="https://www.google.com/maps?q=35.7414419,51.091487" target="_blank">آدرسمون اینجاست</a
+    </div>
+    <div class="countdown" id="countdown"></div>
 </div>
 
 <audio id="music" autoplay>
@@ -137,24 +196,52 @@
     const cover = document.getElementById('cover');
     const envelope = document.getElementById('envelope');
     const music = document.getElementById('music');
-
-    // وقتی روی عکس کلیک شود، صفحه بعدی نمایش داده می‌شود و موزیک پخش می‌شود
     cover.addEventListener('click', function() {
-        cover.style.display = 'none';  // مخفی کردن صفحه اول (عکس)
-        envelope.style.display = 'block';  // نمایش پاکت نامه و کارت دعوت
-        music.play();  // پخش موزیک به‌طور خودکار
+        cover.style.display = 'none';
+        envelope.style.display = 'block';
+        music.play();
 
-        // تأخیر کوتاه برای نمایش انیمیشن باز شدن پاکت نامه
         setTimeout(function() {
-            envelope.classList.add('open');  // افزودن کلاس open برای باز کردن پاکت
-        }, 200);  // مدت زمان تأخیر
+            envelope.classList.add('open'); 
+        }, 200);
     });
 
-
-music.addEventListener('ended', function() {
-        envelope.classList.remove('open');  // پنهان کردن پاکت نامه بعد از پایان موزیک
-        cover.style.display = 'block';  // نمایش مجدد صفحه اول
+    music.addEventListener('ended', function() {
+        envelope.classList.remove('open'); 
+        cover.style.display = 'block'; 
         cover.classList.remove('fade-out');
+    });
+
+    function updateCountdown(endDate) {
+        const countdownElement = document.getElementById('countdown');
+
+        function update() {
+            const now = new Date();
+            const timeDifference = endDate - now;
+            
+            if (timeDifference <= 0) {
+                countdownElement.innerHTML = "امروز روز ماست";
+                return;
+            }
+
+            const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = `
+                ${days} روز ${hours} ساعت ${minutes} دقیقه ${seconds} ثانیه 
+            `;
+        }
+
+        update(); // Update countdown immediately
+        setInterval(update, 1000); // Update every second
+    }
+
+    const endDate = new Date('2024-09-24T00:00:00');
+
+    window.addEventListener('load', function() {
+        updateCountdown(endDate);
     });
 </script>
 
